@@ -29,7 +29,7 @@ Usage of http-perf:
         url which should be measured
 ```
 
-## Example Chart
+## Example
 
 ```
 ▶ http-perf -url http://localhost:8080 -time 20 -n 1
