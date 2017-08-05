@@ -10,11 +10,15 @@ import (
 
 func main() {
 	f := flags.Parse()
-	var m measure.Measurement
+	var m measure.MeasurementResults
 	// if amount > 0, do amount based measuring, otherwise time based
 	if f.Amount > 0 {
-		log.Println("Currently count based measurement not implemented")
-		return
+		var err error
+		m, err = measure.StartWithAmount(f.URL, f.Amount, f.GoroutineN)
+		if err != nil {
+			log.Println("Error: ", err)
+			return
+		}
 	} else {
 		var err error
 		m, err = measure.StartWithTime(f.URL, f.TimeS, f.GoroutineN)
@@ -53,4 +57,5 @@ func createGraph(bytes []byte, path string) {
 		log.Println("Could not close file: ", err)
 		return
 	}
+	log.Println("Created Chart sucessfully at ", path)
 }

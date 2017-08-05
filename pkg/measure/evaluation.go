@@ -8,21 +8,22 @@ import (
 	"github.com/wcharczuk/go-chart"
 )
 
-func (tm *TimeMeasurement) GetAVG() float64 {
+type MeasurementResults []MeasurementResult
+
+func (mr MeasurementResults) GetAVG() float64 {
 	var sum int64
-	for _, v := range tm.Results {
+	for _, v := range mr {
 		sum += v.Value
 	}
-	return float64(sum) / float64(len(tm.Results)) / float64(time.Millisecond)
+	return float64(sum) / float64(len(mr)) / float64(time.Millisecond)
 }
 
-func (tm *TimeMeasurement) GetChart() ([]byte, error) {
+func (mr MeasurementResults) GetChart() ([]byte, error) {
 	//convert array to float array
-	log.Printf("Got %d measurements", len(tm.Results))
 	log.Println("Creating Chart...")
-	resultsFloat64 := make([]float64, 0, len(tm.Results))
-	msArr := make([]float64, 0, len(tm.Results))
-	for _, r := range tm.Results {
+	resultsFloat64 := make([]float64, 0, len(mr))
+	msArr := make([]float64, 0, len(mr))
+	for _, r := range mr {
 		resultsFloat64 = append(resultsFloat64, float64(r.Value)/float64(time.Millisecond.Nanoseconds()))
 		msArr = append(msArr, float64(r.Elapsed)/float64(time.Second.Nanoseconds()))
 	}
