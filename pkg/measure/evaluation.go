@@ -29,11 +29,15 @@ func (tm *TimeMeasurement) GetChart() ([]byte, error) {
 
 	graph := chart.Chart{
 		XAxis: chart.XAxis{
+			Name:      "Time elapsed (s)",
+			NameStyle: chart.StyleShow(),
 			Style: chart.Style{
 				Show: true, //enables / displays the x-axis
 			},
 		},
 		YAxis: chart.YAxis{
+			Name:      "Time server response (ms)",
+			NameStyle: chart.StyleShow(),
 			Style: chart.Style{
 				Show: true, //enables / displays the y-axis
 			},

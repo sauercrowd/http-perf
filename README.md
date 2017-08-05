@@ -5,7 +5,7 @@ Measuring performance of http endpoints.
 ## Usage
 
 Currently measures for an amount of time (e.g. default 60s), should measure a count of measurements in the future, too.
-Creates a Graph, outputs the avg ms per request and the amount of requests made
+Creates a Graph, outputs the avg ms per request and the amount of requests made.
 
 ```
 http-perf -url http://localhost:8080/
@@ -28,3 +28,6 @@ Usage of http-perf:
   -url string
         url which should be measured
 ```
+
+## Example Chart
+![](./perf_example.png)
