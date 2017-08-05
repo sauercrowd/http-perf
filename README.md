@@ -30,4 +30,9 @@ Usage of http-perf:
 ```
 
 ## Example Chart
+
+```
+http-perf -url http://localhost:8080 -n 1 -time 20
+```
+
 ![](./perf_example.png)
