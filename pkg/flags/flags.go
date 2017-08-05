@@ -2,6 +2,8 @@ package flags
 
 import (
 	"flag"
+	"log"
+	"net/url"
 )
 
 type Flags struct {
@@ -19,5 +21,16 @@ func Parse() Flags {
 	flag.BoolVar(&f.NoChart, "nochart", false, "set if no chart should be generated")
 	flag.StringVar(&f.ChartPath, "chartpath", "perf.png", "path for chart png")
 	flag.Parse()
+	checkURL(f.URL)
 	return f
+}
+
+func checkURL(u string) {
+	if u == "" {
+		log.Fatal("Please pass a url")
+	}
+	_, err := url.ParseRequestURI(u)
+	if err != nil {
+		log.Fatalf("URL %s is not valid", u)
+	}
 }
