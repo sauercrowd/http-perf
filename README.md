@@ -32,7 +32,13 @@ Usage of http-perf:
 ## Example Chart
 
 ```
-http-perf -url http://localhost:8080 -n 1 -time 20
+▶ http-perf -url http://localhost:8080 -time 20 -n 1
+2017/08/05 19:02:51 Measuring for 20 seconds with 1 goroutines
+2017/08/05 19:03:11 Do not start another request
+2017/08/05 19:03:11 Took 20.003788 seconds for 3607 measurements
+2017/08/05 19:03:11 AVG request time: 5.533430 ms
+2017/08/05 19:03:11 Creating Chart...
+2017/08/05 19:03:12 Created Chart sucessfully at perf.png
 ```
 
 ![](./perf_example.png)

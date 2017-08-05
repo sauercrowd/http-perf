@@ -18,18 +18,18 @@ func doRequest(ctx context.Context, url string, MeasurementStart time.Time) (*ti
 	r.WithContext(ctx)
 	r.Close = true
 	if err != nil {
-		log.Fatalln("Could create request: ", err)
+		log.Fatalln("Could create request:", err)
 		return nil, err
 	}
 	start := time.Now()
 	resp, err := client.Do(r)
 	elapsed := time.Since(start)
 	if err != nil {
-		log.Fatalln("Could not do request: ", err)
+		log.Fatalln("Could not do request:", err)
 		return nil, err
 	}
 	if resp.StatusCode != http.StatusOK {
-		log.Println("Got not okay status: ", resp.StatusCode)
+		log.Println("Got not okay status:", resp.StatusCode)
 	}
 	if err := resp.Body.Close(); err != nil {
 		log.Println("Could not close body")
