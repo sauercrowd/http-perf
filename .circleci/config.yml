@@ -24,8 +24,7 @@ jobs:
       - run:
           name: Run unit tests
           command: |
-            trap "go-junit-report <${TEST_RESULTS}/go-test.out > ${TEST_RESULTS}/go-test-report.xml" EXIT
-            go test -v github.com/sauercrowd/http-perf/pkg/... | tee ${TEST_RESULTS}/go-test.out
+            go test -v github.com/sauercrowd/http-perf/pkg/... |& go-junit-report  > ${TEST_RESULTS}/go-test-report.xml
       - store_test_results:
           path: /tmp/test-results
     
