@@ -8,7 +8,7 @@ import (
 )
 
 func StartWithAmount(url string, count int, goroutineN int, durationNS *int64) ([]MeasurementResult, error) {
-	log.Printf("Making %d requests with %d goroutines", count, goroutineN)
+	log.Printf("Making %d requests with %d goroutine(s)", count, goroutineN)
 	ch := make(chan MeasurementResult)
 	ctx, cancel := context.WithCancel(context.Background())
 

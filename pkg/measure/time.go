@@ -18,7 +18,7 @@ type TimeMeasurement struct {
 }
 
 func StartWithTime(url string, seconds int, goroutineN int, durationNS *int64) ([]MeasurementResult, error) {
-	log.Printf("Measuring for %d seconds with %d goroutines", seconds, goroutineN)
+	log.Printf("Measuring for %d seconds with %d goroutine(s)", seconds, goroutineN)
 	timeout, err := time.ParseDuration(fmt.Sprintf("%ds", seconds))
 	if err != nil {
 		return nil, err
