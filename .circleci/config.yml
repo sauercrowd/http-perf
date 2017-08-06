@@ -6,8 +6,6 @@ jobs:
     working_directory: /go/src/github.com/sauercrowd/http-perf
     steps:
       - checkout
-
-      # specify any bash command here prefixed with `run: `
       - run: go get -u github.com/golang/dep/cmd/dep
       - run: dep ensure
       - run: go build
@@ -24,8 +22,8 @@ jobs:
       - run:
         name: Run unit tests
           command: |
-            trap "go-junit-report /tmp/go-test.out > /tmp/go-test-report.xml" EXIT
-            go test -v pkg/... | tee /tmp/go-test.out
+            go test -v github.com/sauercrowd/http-perf/pkg/... | tee /tmp/go-test.out
+            go-junit-report /tmp/go-test.out > /tmp/go-test-report.xml
       - store_test_results:
           path: go-test-report.xml
     
@@ -49,6 +47,9 @@ workflows:
   build-and-run:
     jobs:
       - build
-      - run:
+      - test:
           requires:
             - build
+      - run:
+          requires:
+            - test
