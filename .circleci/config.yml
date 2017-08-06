@@ -1,0 +1,11 @@
+version: 2
+jobs:
+  build:
+    working_directory: /go/src/github.com/sauercrowd/http-perf
+    docker:
+      - image: circleci/golang:1.8
+    steps:
+      - checkout
+    run:
+      name: Build http-perf
+      command: go build
