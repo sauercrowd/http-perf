@@ -22,4 +22,6 @@ jobs:
       - run: go get -u github.com/golang/dep/cmd/dep
       - run: dep ensure
       - run: go build
-      - run: http-perf -url https://github.com
+      - run: http-perf -url https://github.com > /tmp/test-results
+    store_test_results:
+      path: /tmp/test-results
