@@ -31,7 +31,7 @@ func main() {
 	}
 
 	errorCount := evaluation.GetErrorCount(m)
-	log.Printf("Got %d error(s)", errorCount)
+	log.Printf("Got %d non-200 http status code(s)", errorCount)
 	avg := evaluation.GetAVG(m)
 	log.Printf("AVG request time: %f ms", avg)
 
