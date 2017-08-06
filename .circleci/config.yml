@@ -1,11 +1,13 @@
 version: 2
 jobs:
   build:
-    working_directory: /go/src/github.com/sauercrowd/http-perf
     docker:
       - image: circleci/golang:1.8
+    working_directory: /go/src/github.com/{{ORG_NAME}}/{{REPO_NAME}}
     steps:
       - checkout
-    run:
-      name: Build http-perf
-      command: go build
+
+      # specify any bash command here prefixed with `run: `
+      - run: go get -u github.com/golang/dep/cmd/dep
+      - run: dep ensure
+      - run: go build
