@@ -30,12 +30,15 @@ func doRequest(ctx context.Context, url string, MeasurementStart time.Time) (*re
 	start := time.Now()
 	resp, err := http.DefaultClient.Do(r)
 	elapsed := time.Since(start)
-	if err != nil && strings.HasSuffix(err.Error(), ": context deadline exceeded") {
-		return nil, nil
-	}
 	if err != nil {
+		// if err is context cancelation, return (nil, nil), otherwise error
+		if strings.HasSuffix(err.Error(), ": context deadline exceeded") ||
+			strings.HasSuffix(err.Error(), ": context canceled") {
+			return nil, nil
+		}
 		log.Fatalln("Could not do request:", err)
 		return nil, err
+
 	}
 	if resp.StatusCode != http.StatusOK {
 		log.Println("Got not okay status:", resp.StatusCode)
