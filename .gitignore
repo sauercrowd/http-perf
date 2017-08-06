@@ -1,4 +1,5 @@
 http-perf
 vendor/
 perf.png
+perf.json
 main

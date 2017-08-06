@@ -20,7 +20,7 @@ func StartWithTime(url string, seconds int, goroutineN int, durationNS *int64) (
 	log.Printf("Measuring for %d seconds with %d goroutine(s)", seconds, goroutineN)
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(seconds)*time.Second)
-	defer cancel()
+	defer cancel() // release timing resources
 
 	start := time.Now()
 	var mtx sync.Mutex

@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -19,17 +20,19 @@ type requestResult struct {
 }
 
 func doRequest(ctx context.Context, url string, MeasurementStart time.Time) (*requestResult, error) {
-	var client http.Client
-	r, err := http.NewRequest("GET", url, nil)
-	r.WithContext(ctx)
+	r, err := http.NewRequest(http.MethodGet, url, nil)
+	r = r.WithContext(ctx)
 	r.Close = true
 	if err != nil {
 		log.Fatalln("Could create request:", err)
 		return nil, err
 	}
 	start := time.Now()
-	resp, err := client.Do(r)
+	resp, err := http.DefaultClient.Do(r)
 	elapsed := time.Since(start)
+	if err != nil && strings.HasSuffix(err.Error(), ": context deadline exceeded") {
+		return nil, nil
+	}
 	if err != nil {
 		log.Fatalln("Could not do request:", err)
 		return nil, err
