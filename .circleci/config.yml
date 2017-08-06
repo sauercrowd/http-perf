@@ -21,9 +21,9 @@ jobs:
       - run: go get github.com/jstemmer/go-junit-report
       - run:
           name: Run unit tests
-            command: |
-              go test -v github.com/sauercrowd/http-perf/pkg/... | tee /tmp/go-test.out
-              go-junit-report /tmp/go-test.out > /tmp/go-test-report.xml
+          command: |
+            go test -v github.com/sauercrowd/http-perf/pkg/... | tee /tmp/go-test.out
+            go-junit-report /tmp/go-test.out > /tmp/go-test-report.xml
       - store_test_results:
           path: go-test-report.xml
     
