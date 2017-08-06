@@ -24,7 +24,7 @@ jobs:
             go test -v github.com/sauercrowd/http-perf/pkg/... | tee /tmp/go-test.out
             go-junit-report /tmp/go-test.out > /tmp/go-test-report.xml
       - store_test_results:
-          path: go-test-report.xml
+          path: /tmp/go-test-report.xml
     
   run:
     docker:
