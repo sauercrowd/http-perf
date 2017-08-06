@@ -11,6 +11,24 @@ jobs:
       - run: go get -u github.com/golang/dep/cmd/dep
       - run: dep ensure
       - run: go build
+  test:
+    docker:
+      - image: circleci/golang:1.8
+    working_directory: /go/src/github.com/sauercrowd/http-perf
+    steps:
+      - checkout
+      - run: mkdir -p $TEST_RESULTS
+      - run: go get -u github.com/golang/dep/cmd/dep
+      - run: dep ensure
+      - run: go get github.com/jstemmer/go-junit-report
+      - run:
+        name: Run unit tests
+          command: |
+            trap "go-junit-report /tmp/go-test.out > /tmp/go-test-report.xml" EXIT
+            go test -v pkg/... | tee /tmp/go-test.out
+      - store_test_results:
+          path: go-test-report.xml
+    
   run:
     docker:
       - image: circleci/golang:1.8
@@ -23,8 +41,6 @@ jobs:
       - run: dep ensure
       - run: go install
       - run: http-perf -url https://github.com -n 1 -count 10 -json |& tee /tmp/test-results
-      - store_test_results:
-          path: /tmp/test-results
       - store_artifacts:
           path: perf.json
 
