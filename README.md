@@ -39,7 +39,7 @@ Usage of http-perf:
 
 ```
 ▶ http-perf -url https://github.com -n 1 -count 20 -json
-2017/08/06 19:00:59 Making 20 requests with 1 goroutines
+2017/08/06 19:00:59 Making 20 requests with 1 goroutine(s)
 2017/08/06 19:01:15 Took 16.483824 seconds for 20 measurements
 2017/08/06 19:01:15 Got 0 non-200 http status code(s)
 2017/08/06 19:01:15 AVG request time: 824.169449 ms
