@@ -25,3 +25,12 @@ jobs:
       - run: http-perf -url https://github.com > /tmp/test-results
     store_test_results:
       path: /tmp/test-results
+
+workflows:
+  version: 2
+  build-and-run:
+    jobs:
+      - build
+      - run:
+          requires:
+            - build
