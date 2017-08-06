@@ -1,5 +1,7 @@
 # HTTP Perf
 
+[![CircleCI](https://circleci.com/gh/sauercrowd/http-perf.svg?style=svg)](https://circleci.com/gh/sauercrowd/http-perf)
+
 Measuring performance of http endpoints.
 
 ## Usage
