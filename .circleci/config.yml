@@ -11,3 +11,15 @@ jobs:
       - run: go get -u github.com/golang/dep/cmd/dep
       - run: dep ensure
       - run: go build
+  run:
+    docker:
+      - image: circleci/golang:1.8
+    working_directory: /go/src/github.com/sauercrowd/http-perf
+    steps:
+      - checkout
+
+      # specify any bash command here prefixed with `run: `
+      - run: go get -u github.com/golang/dep/cmd/dep
+      - run: dep ensure
+      - run: go build
+      - run: http-perf -url https://github.com
