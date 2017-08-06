@@ -13,18 +13,21 @@ jobs:
     docker:
       - image: circleci/golang:1.8
     working_directory: /go/src/github.com/sauercrowd/http-perf
+    environment:
+      TEST_RESULTS: /tmp/test-results
     steps:
       - checkout
       - run: go get -u github.com/golang/dep/cmd/dep
+      - run: mkdir -p $TEST_RESULTS
       - run: dep ensure
       - run: go get github.com/jstemmer/go-junit-report
       - run:
           name: Run unit tests
           command: |
-            go test -v github.com/sauercrowd/http-perf/pkg/... | tee /tmp/go-test.out
-            go-junit-report /tmp/go-test.out > /tmp/go-test-report.xml
+            trap "go-junit-report <${TEST_RESULTS}/go-test.out > ${TEST_RESULTS}/go-test-report.xml" EXIT
+            go test -v github.com/sauercrowd/http-perf/pkg/... | tee ${TEST_RESULTS}/go-test.out
       - store_test_results:
-          path: /tmp/go-test-report.xml
+          path: /tmp/test-results
     
   run:
     docker:
