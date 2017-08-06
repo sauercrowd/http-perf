@@ -21,6 +21,10 @@ Usage of http-perf:
         path for chart png (default "perf.png")
   -count int
         how many times shoud be measured. If used, time flag will be ignored
+  -json
+        creates a json file with keys requests, timeTotalNS, timePerRequestMS, errorCount(non 200 http status), statusCounts(object, httpstatuscode as key, count as value)
+  -jsonpath string
+        filepath for json file (default "perf.json")
   -n int
         amount of goroutines beeing used (default 100)
   -nochart
@@ -34,13 +38,19 @@ Usage of http-perf:
 ## Example
 
 ```
-▶ http-perf -url http://localhost:8080 -time 20 -n 1
-2017/08/05 19:02:51 Measuring for 20 seconds with 1 goroutines
-2017/08/05 19:03:11 Do not start another request
-2017/08/05 19:03:11 Took 20.003788 seconds for 3607 measurements
-2017/08/05 19:03:11 AVG request time: 5.533430 ms
-2017/08/05 19:03:11 Creating Chart...
-2017/08/05 19:03:12 Created Chart sucessfully at perf.png
+▶ http-perf -url https://github.com -n 1 -count 20 -json
+2017/08/06 19:00:59 Making 20 requests with 1 goroutines
+2017/08/06 19:01:15 Took 16.483824 seconds for 20 measurements
+2017/08/06 19:01:15 Got 0 error(s)
+2017/08/06 19:01:15 AVG request time: 824.169449 ms
+2017/08/06 19:01:15 Creating Chart...
+2017/08/06 19:01:16 Created Chart sucessfully at perf.png
 ```
 
 ![](./perf_example.png)
+
+```
+▶ cat perf.json
+{"requests":20,"timeTotalNS":16483824242,"timePerRequestMS":824.16944875,"errorCount":0,"statusCounts":{"200":20}}
+```
+

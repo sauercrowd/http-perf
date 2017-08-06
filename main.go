@@ -4,42 +4,56 @@ import (
 	"log"
 	"os"
 
+	"github.com/sauercrowd/http-perf/pkg/evaluation"
 	"github.com/sauercrowd/http-perf/pkg/flags"
 	"github.com/sauercrowd/http-perf/pkg/measure"
 )
 
 func main() {
 	f := flags.Parse()
-	var m measure.MeasurementResults
+	var m []measure.MeasurementResult
+	var durationNS int64
 	// if amount > 0, do amount based measuring, otherwise time based
 	if f.Amount > 0 {
 		var err error
-		m, err = measure.StartWithAmount(f.URL, f.Amount, f.GoroutineN)
+		m, err = measure.StartWithAmount(f.URL, f.Amount, f.GoroutineN, &durationNS)
 		if err != nil {
 			log.Println("Error:", err)
 			return
 		}
 	} else {
 		var err error
-		m, err = measure.StartWithTime(f.URL, f.TimeS, f.GoroutineN)
+		m, err = measure.StartWithTime(f.URL, f.TimeS, f.GoroutineN, &durationNS)
 		if err != nil {
 			log.Println("Error:", err)
 			return
 		}
 	}
 
-	log.Printf("AVG request time: %f ms", m.GetAVG())
-	if f.NoChart {
-		return
+	errorCount := evaluation.GetErrorCount(m)
+	log.Printf("Got %d error(s)", errorCount)
+	avg := evaluation.GetAVG(m)
+	log.Printf("AVG request time: %f ms", avg)
+
+	//create graph if needed
+	if !f.NoChart {
+		bytes, err := evaluation.GetChart(m)
+		if err != nil {
+			log.Println("Could create time chart:", err)
+			return
+		}
+		createGraph(bytes, f.ChartPath)
 	}
 
-	//create graph
-	bytes, err := m.GetChart()
-	if err != nil {
-		log.Println("Could create time chart:", err)
-		return
+	//create JSON if needed
+	if f.ResultJSON {
+		statusCountMap := evaluation.GetStatusCountsMap(m)
+		err := evaluation.WriteJSON(len(m), durationNS, avg, errorCount, statusCountMap, f.JSONPath)
+		if err != nil {
+			log.Println("Could not write json")
+			return
+		}
 	}
-	createGraph(bytes, f.ChartPath)
 }
 
 func createGraph(bytes []byte, path string) {

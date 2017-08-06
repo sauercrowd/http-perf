@@ -17,7 +17,7 @@ type TimeMeasurement struct {
 	Results []TimeMeasurementResult
 }
 
-func StartWithTime(url string, seconds int, goroutineN int) ([]MeasurementResult, error) {
+func StartWithTime(url string, seconds int, goroutineN int, durationNS *int64) ([]MeasurementResult, error) {
 	log.Printf("Measuring for %d seconds with %d goroutines", seconds, goroutineN)
 	timeout, err := time.ParseDuration(fmt.Sprintf("%ds", seconds))
 	if err != nil {
@@ -41,7 +41,11 @@ func StartWithTime(url string, seconds int, goroutineN int) ([]MeasurementResult
 	for v := range ch {
 		mr = append(mr, v)
 	}
-	log.Printf("Took %f seconds for %d measurements", float64(time.Since(start).Nanoseconds())/float64(time.Second.Nanoseconds()), len(mr))
+	duration := time.Since(start).Nanoseconds()
+	if durationNS != nil {
+		*durationNS = duration
+	}
+	log.Printf("Took %f seconds for %d measurements", float64(duration)/float64(time.Second.Nanoseconds()), len(mr))
 	return mr, nil
 }
 
@@ -59,7 +63,11 @@ func doTimeRequest(ctx context.Context, url string, ch chan MeasurementResult, M
 			close(ch)
 			return
 		default:
-			ch <- MeasurementResult{Value: d.Nanoseconds(), Elapsed: time.Since(MeasurementStart).Nanoseconds()}
+			ch <- MeasurementResult{
+				RequestTime: d.Elapsed.Nanoseconds(),
+				SinceStart:  time.Since(MeasurementStart).Nanoseconds(),
+				StatusCode:  d.StatusCode,
+			}
 		}
 		mtx.Unlock()
 	}

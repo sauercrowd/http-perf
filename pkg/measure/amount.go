@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-func StartWithAmount(url string, count int, goroutineN int) ([]MeasurementResult, error) {
+func StartWithAmount(url string, count int, goroutineN int, durationNS *int64) ([]MeasurementResult, error) {
 	log.Printf("Making %d requests with %d goroutines", count, goroutineN)
 	ch := make(chan MeasurementResult)
 	ctx, cancel := context.WithCancel(context.Background())
@@ -27,7 +27,12 @@ func StartWithAmount(url string, count int, goroutineN int) ([]MeasurementResult
 		}
 	}
 	cancel()
-	log.Printf("Took %f seconds for %d measurements", float64(time.Since(start).Nanoseconds())/float64(time.Second.Nanoseconds()), count)
+	duration := time.Since(start).Nanoseconds()
+	//write time, if not nil
+	if durationNS != nil {
+		*durationNS = duration
+	}
+	log.Printf("Took %f seconds for %d measurements", float64(duration)/float64(time.Second.Nanoseconds()), count)
 	return mr, nil
 }
 
@@ -45,7 +50,11 @@ func doAmountRequest(ctx context.Context, url string, ch chan MeasurementResult,
 			close(ch)
 			return
 		default:
-			ch <- MeasurementResult{Value: d.Nanoseconds(), Elapsed: time.Since(MeasurementStart).Nanoseconds()}
+			ch <- MeasurementResult{
+				RequestTime: d.Elapsed.Nanoseconds(),
+				SinceStart:  time.Since(MeasurementStart).Nanoseconds(),
+				StatusCode:  d.StatusCode,
+			}
 		}
 		mtx.Unlock()
 	}

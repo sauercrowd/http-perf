@@ -1,31 +1,22 @@
-package measure
+package evaluation
 
 import (
 	"bytes"
 	"log"
 	"time"
 
-	"github.com/wcharczuk/go-chart"
+	"github.com/sauercrowd/http-perf/pkg/measure"
+	chart "github.com/wcharczuk/go-chart"
 )
 
-type MeasurementResults []MeasurementResult
-
-func (mr MeasurementResults) GetAVG() float64 {
-	var sum int64
-	for _, v := range mr {
-		sum += v.Value
-	}
-	return float64(sum) / float64(len(mr)) / float64(time.Millisecond)
-}
-
-func (mr MeasurementResults) GetChart() ([]byte, error) {
+func GetChart(mr []measure.MeasurementResult) ([]byte, error) {
 	//convert array to float array
 	log.Println("Creating Chart...")
 	resultsFloat64 := make([]float64, 0, len(mr))
 	msArr := make([]float64, 0, len(mr))
 	for _, r := range mr {
-		resultsFloat64 = append(resultsFloat64, float64(r.Value)/float64(time.Millisecond.Nanoseconds()))
-		msArr = append(msArr, float64(r.Elapsed)/float64(time.Second.Nanoseconds()))
+		resultsFloat64 = append(resultsFloat64, float64(r.RequestTime)/float64(time.Millisecond.Nanoseconds()))
+		msArr = append(msArr, float64(r.SinceStart)/float64(time.Second.Nanoseconds()))
 	}
 
 	graph := chart.Chart{

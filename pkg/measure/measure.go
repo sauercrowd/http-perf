@@ -8,11 +8,17 @@ import (
 )
 
 type MeasurementResult struct {
-	Value   int64
-	Elapsed int64
+	RequestTime int64
+	SinceStart  int64
+	StatusCode  int
 }
 
-func doRequest(ctx context.Context, url string, MeasurementStart time.Time) (*time.Duration, error) {
+type requestResult struct {
+	Elapsed    time.Duration
+	StatusCode int
+}
+
+func doRequest(ctx context.Context, url string, MeasurementStart time.Time) (*requestResult, error) {
 	var client http.Client
 	r, err := http.NewRequest("GET", url, nil)
 	r.WithContext(ctx)
@@ -35,5 +41,5 @@ func doRequest(ctx context.Context, url string, MeasurementStart time.Time) (*ti
 		log.Println("Could not close body")
 		return nil, err
 	}
-	return &elapsed, nil
+	return &requestResult{Elapsed: elapsed, StatusCode: resp.StatusCode}, nil
 }
