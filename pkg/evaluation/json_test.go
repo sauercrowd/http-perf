@@ -2,7 +2,6 @@ package evaluation_test
 
 import (
 	"encoding/json"
-	"log"
 	"os"
 	"testing"
 
@@ -56,6 +55,6 @@ func TestJSON(t *testing.T) {
 	}
 	//remove json (not important for test, so log.Print used if it fails)
 	if err := os.Remove(filepath); err != nil {
-		log.Print("Could not remove ", filepath, err)
+		t.Log("Could not remove ", filepath, err)
 	}
 }
